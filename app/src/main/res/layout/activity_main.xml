@@ -119,5 +119,4 @@
         android:layout_toRightOf="@id/txtv_headline_elev"/>
 
 
-
 </RelativeLayout>
