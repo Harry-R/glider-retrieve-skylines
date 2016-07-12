@@ -9,8 +9,115 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="de.lrapp.skylinestrackingtesting.MainActivity">
 
+    <EditText
+        android:id="@+id/et_trackingId"
+        android:hint="@string/et_pilotID"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/btn_update"
+        android:text="@string/btn_update"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/et_trackingId"/>
+
     <TextView
+        android:id="@+id/txtv_headline_pilotName"
+        android:text="@string/txtv_headline_pilotName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:layout_below="@+id/btn_update"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"/>
+
+    <TextView
+        android:id="@+id/txtv_pilotName"
+        android:text="@string/txtv_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:layout_below="@id/btn_update"
+        android:layout_toRightOf="@id/txtv_headline_pilotName"/>
+
+    <TextView
+        android:id="@+id/txtv_headline_nearestApt"
+        android:text="@string/txtv_headline_nearestApt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtv_pilotName"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"/>
+
+    <TextView
+        android:id="@+id/txtv_nearestApt"
+        android:text="@string/txtv_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtv_pilotName"
+        android:layout_toRightOf="@id/txtv_headline_nearestApt"/>
+
+    <TextView
+        android:id="@+id/txtv_headline_nearestAptDist"
+        android:text="@string/txtv_headline_nearestAptDist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtv_nearestApt"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"/>
+
+    <TextView
+        android:id="@+id/txtv_nearestAptDist"
+        android:text="@string/txtv_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtv_nearestApt"
+        android:layout_toRightOf="@id/txtv_headline_nearestAptDist"/>
+
+    <TextView
+        android:id="@+id/txtv_headline_pos"
+        android:text="@string/txtv_headline_pos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtv_nearestAptDist"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"/>
+
+    <TextView
+        android:id="@+id/txtv_pos"
+        android:text="@string/txtv_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtv_nearestAptDist"
+        android:layout_toRightOf="@id/txtv_headline_pos"/>
+
+    <TextView
+        android:id="@+id/txtv_headline_alt"
+        android:text="@string/txtv_headline_alt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtv_pos"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"/>
+
+    <TextView
+        android:id="@+id/txtv_alt"
+        android:text="@string/txtv_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtv_pos"
+        android:layout_toRightOf="@id/txtv_headline_alt"/>
+
+    <TextView
+        android:id="@+id/txtv_headline_elev"
+        android:text="@string/txtv_headline_elev"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtv_alt"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"/>
+
+    <TextView
+        android:id="@+id/txtv_elev"
+        android:text="@string/txtv_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtv_alt"
+        android:layout_toRightOf="@id/txtv_headline_elev"/>
+
+
+
 </RelativeLayout>
