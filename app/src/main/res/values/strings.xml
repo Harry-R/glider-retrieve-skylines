@@ -10,4 +10,10 @@
     <string name="txtv_headline_alt">Altitude:</string>
     <string name="txtv_headline_elev">Elevation:</string>
     <string name="txtv_default">---</string>
+    <string name="meters">%1$d m</string>
+    <string name="kilometers">%1$.0f km</string>
+    <string name="position">%1$f N/S %2$f E/W</string>
+    <!-- Toasts -->
+    <string name="toast_pilotIdNF">No tracking data found! Wrong pilot ID?</string>
+
 </resources>
