@@ -24,7 +24,7 @@ public class ApiRequest {
      */
     static void liveTrackData(int pilotId, ApiCallback apiCallback) {
         try {
-            URL url = new URL("https://skylines.aero/tracking");
+            URL url = new URL("https://skylines.aero/api/tracking");
             new RequestTask(url, apiCallback, pilotId).execute();
         } catch (IOException ex) {
             ex.printStackTrace();
