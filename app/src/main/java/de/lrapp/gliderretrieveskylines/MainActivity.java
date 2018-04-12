@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity implements ApiCallback{
     private TextView txtv_pilotName;
     private TextView txtv_nearestApt;
     private TextView txtv_nearestAptDis;
-    private TextView txtv_pos;
+    private TextView txtv_pos;q
     private TextView txtv_alt;
     private TextView txtv_elev;
     // API
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements ApiCallback{
      */
     public void clickBtnUpdate(View view) {
         int pilotID = Integer.parseInt(et_pilotId.getText().toString());
-        ApiRequest.liveTrackData(pilotID, apiCallback);
+        ApiRequest.startUpdater(pilotID, apiCallback);
     }
 
     /**
@@ -88,11 +88,11 @@ public class MainActivity extends AppCompatActivity implements ApiCallback{
     }
 
     /**
-     * work with data from callback, triggered wenn callback is called by ApiRequest's async task
+     * work with data from callback, triggered when callback is called by ApiRequest's async task
      * @param data pilot's track data as JSONObject
      */
     public void callback(JSONObject data) {
-        Log.i("MAinActivity:", "callback!");
+        Log.i("MainActivity:", "callback!");
         updateUI(data);
     }
 }

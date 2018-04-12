@@ -1,6 +1,7 @@
 package de.lrapp.gliderretrieveskylines;
 
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -13,6 +14,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -20,7 +23,9 @@ public class ApiRequest {
 
 
     /**
-     * Coordinates the api request
+     *Coordinates the api request
+     * @param pilotId the pilot's id
+     * @param apiCallback the callback to call after fetching api data
      */
     static void liveTrackData(int pilotId, ApiCallback apiCallback) {
         try {
@@ -126,6 +131,31 @@ public class ApiRequest {
             e.printStackTrace();
             return null;
         }
+    }
+
+    /**
+     * update every 5 seconds by calling liveTrackData function
+     * @param pilotId the pilot's id
+     * @param apiCallback the callback to call after fetching api data
+     */
+    static void startUpdater(final int pilotId, final ApiCallback apiCallback) {
+        final Handler handler = new Handler();
+        Timer timer = new Timer();
+        TimerTask doAsynchronousTask = new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(new Runnable() {
+                    public void run() {
+                        try {
+                            liveTrackData(pilotId, apiCallback);
+                        } catch (Exception e) {
+                            // TODO Auto-generated catch block
+                        }
+                    }
+                });
+            }
+        };
+        timer.schedule(doAsynchronousTask, 0, 5000);
     }
 
 }
