@@ -1,4 +1,4 @@
-package de.lrapp.skylinestrackingtesting;
+package de.lrapp.gliderretrieveskylines;
 
 import android.os.AsyncTask;
 import android.util.Log;

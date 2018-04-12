@@ -1,4 +1,4 @@
-package de.lrapp.skylinestrackingtesting;
+package de.lrapp.gliderretrieveskylines;
 
 
 import org.json.JSONObject;
