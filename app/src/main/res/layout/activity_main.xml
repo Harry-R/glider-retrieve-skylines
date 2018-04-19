@@ -120,11 +120,28 @@
         android:layout_toRightOf="@id/txtv_headline_elev"/>
 
     <TextView
+        android:id="@+id/txtv_headline_hag"
+        android:text="@string/txtv_headline_hag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtv_elev"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"/>
+
+    <TextView
+        android:id="@+id/txtv_hag"
+        android:text="@string/txtv_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtv_elev"
+        android:layout_toRightOf="@id/txtv_headline_hag"/>
+
+
+    <TextView
         android:id="@+id/txtv_debug"
         android:text="@string/txtv_default"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/txtv_headline_elev"/>
+        android:layout_below="@id/txtv_headline_hag"/>
 
 
 </RelativeLayout>

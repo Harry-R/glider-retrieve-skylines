@@ -19,9 +19,10 @@ public class MainActivity extends AppCompatActivity implements ApiCallback{
     private TextView txtv_pilotName;
     private TextView txtv_nearestApt;
     private TextView txtv_nearestAptDis;
-    private TextView txtv_pos;q
+    private TextView txtv_pos;
     private TextView txtv_alt;
     private TextView txtv_elev;
+    private TextView txtv_hag;
     // API
     ApiCallback apiCallback;
     // placeholder strings
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements ApiCallback{
         txtv_pos = (TextView) findViewById(R.id.txtv_pos);
         txtv_alt = (TextView) findViewById(R.id.txtv_alt);
         txtv_elev = (TextView) findViewById(R.id.txtv_elev);
+        txtv_hag = (TextView) findViewById(R.id.txtv_hag);
 
         meters = getResources().getString(R.string.meters);
         kilometers = getResources().getString(R.string.kilometers);
@@ -79,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements ApiCallback{
                         data.getJSONArray("location").getDouble(0)));
                 txtv_alt.setText(String.format(meters, data.getInt("altitude")));
                 txtv_elev.setText(String.format(meters, data.getInt("elevation")));
+                txtv_hag.setText(String.format(meters, data.getInt("altitude") - data.getInt("elevation")));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
