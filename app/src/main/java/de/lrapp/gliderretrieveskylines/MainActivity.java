@@ -11,6 +11,10 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Locale;
+
+import static java.lang.String.*;
+
 public class MainActivity extends AppCompatActivity implements ApiCallback{
 
     // UI
@@ -23,18 +27,22 @@ public class MainActivity extends AppCompatActivity implements ApiCallback{
     private TextView txtv_alt;
     private TextView txtv_elev;
     private TextView txtv_hag;
+    private TextView txtv_pilotId;
     // API
     ApiCallback apiCallback;
     // placeholder strings
     String meters;
     String kilometers;
     String position;
+    // current locale
+    Locale cur_locale;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         apiCallback = this;
+        cur_locale = getResources().getConfiguration().locale;
         initUi();
     }
 
@@ -51,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements ApiCallback{
         txtv_alt = (TextView) findViewById(R.id.txtv_alt);
         txtv_elev = (TextView) findViewById(R.id.txtv_elev);
         txtv_hag = (TextView) findViewById(R.id.txtv_hag);
+        txtv_pilotId = (TextView) findViewById(R.id.txtv_pilotId);
 
         meters = getResources().getString(R.string.meters);
         kilometers = getResources().getString(R.string.kilometers);
@@ -75,13 +84,14 @@ public class MainActivity extends AppCompatActivity implements ApiCallback{
             txtv_debug.setText(data.toString());
             try {
                 txtv_pilotName.setText(data.getJSONObject("pilot").getString("name"));
+                txtv_pilotId.setText(format(cur_locale, "%d", data.getJSONObject("pilot").getInt("id")));
                 txtv_nearestApt.setText(data.getJSONObject("nearestAirport").getString("name"));
-                txtv_nearestAptDis.setText(String.format(kilometers, data.getDouble("nearestAirportDistance")/1000));
-                txtv_pos.setText(String.format(position, data.getJSONArray("location").getDouble(1),
+                txtv_nearestAptDis.setText(format(kilometers, data.getDouble("nearestAirportDistance")/1000));
+                txtv_pos.setText(format(position, data.getJSONArray("location").getDouble(1),
                         data.getJSONArray("location").getDouble(0)));
-                txtv_alt.setText(String.format(meters, data.getInt("altitude")));
-                txtv_elev.setText(String.format(meters, data.getInt("elevation")));
-                txtv_hag.setText(String.format(meters, data.getInt("altitude") - data.getInt("elevation")));
+                txtv_alt.setText(format(meters, data.getInt("altitude")));
+                txtv_elev.setText(format(meters, data.getInt("elevation")));
+                txtv_hag.setText(format(meters, data.getInt("altitude") - data.getInt("elevation")));
             } catch (JSONException e) {
                 e.printStackTrace();
             }

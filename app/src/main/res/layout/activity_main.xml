@@ -24,11 +24,28 @@
         android:layout_below="@+id/et_trackingId"/>
 
     <TextView
+        android:id="@+id/txtv_headline_pilotId"
+        android:text="@string/txtv_headline_pilotId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_update"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"/>
+
+    <TextView
+        android:id="@+id/txtv_pilotId"
+        android:text="@string/txtv_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btn_update"
+        android:layout_toRightOf="@id/txtv_headline_pilotId"/>
+
+
+    <TextView
         android:id="@+id/txtv_headline_pilotName"
         android:text="@string/txtv_headline_pilotName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/btn_update"
+        android:layout_below="@+id/txtv_pilotId"
         android:layout_marginRight="@dimen/activity_horizontal_margin"/>
 
     <TextView
@@ -36,7 +53,7 @@
         android:text="@string/txtv_default"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" 
-        android:layout_below="@id/btn_update"
+        android:layout_below="@id/txtv_pilotId"
         android:layout_toRightOf="@id/txtv_headline_pilotName"/>
 
     <TextView

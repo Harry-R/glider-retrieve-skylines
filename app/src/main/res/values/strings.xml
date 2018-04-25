@@ -10,6 +10,7 @@
     <string name="txtv_headline_alt">Altitude:</string>
     <string name="txtv_headline_elev">Elevation:</string>
     <string name="txtv_headline_hag">Height above GND:</string>
+    <string name="txtv_headline_pilotId">Pilot Id:</string>
     <string name="txtv_default">---</string>
     <string name="meters">%1$d m</string>
     <string name="kilometers">%1$.0f km</string>
