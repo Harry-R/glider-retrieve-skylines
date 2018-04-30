@@ -1,6 +1,5 @@
 package de.lrapp.gliderretrieveskylines;
 
-
 import org.json.JSONObject;
 
 public interface ApiCallback {

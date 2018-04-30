@@ -27,7 +27,7 @@ public class ApiRequest {
      * @param pilotId the pilot's id
      * @param apiCallback the callback to call after fetching api data
      */
-    static void liveTrackData(int pilotId, ApiCallback apiCallback) {
+    private static void liveTrackData(int pilotId, ApiCallback apiCallback) {
         try {
             URL url = new URL("https://skylines.aero/api/tracking");
             new RequestTask(url, apiCallback, pilotId).execute();
@@ -40,9 +40,9 @@ public class ApiRequest {
      * Establishes a http connection, calls readStream
      * @return see read stream
      * @param url url to connect to
-     * @throws IOException
+     * @throws IOException if url connect not successful
      */
-    protected static String connect(URL url) throws IOException {
+    static String connect(URL url) throws IOException {
         HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
         urlConnection.setRequestProperty("Accept", "application/json");
         try {
@@ -57,9 +57,9 @@ public class ApiRequest {
      * Reads an InputStream and converts it to a String.
      * @param stream the InputStream
      * @return string from the stream
-     * @throws IOException
+     * @throws IOException if reading stream fails
      */
-    protected static String readStream(InputStream stream) throws IOException {
+    private static String readStream(InputStream stream) throws IOException {
         BufferedReader r = new BufferedReader(new InputStreamReader(stream));
         StringBuilder total = new StringBuilder();
         String line;
@@ -71,6 +71,9 @@ public class ApiRequest {
     }
 
 
+    /**
+     * Async task for handling API HTTP request
+     */
     private static class RequestTask extends AsyncTask<Void, Void, String> {
         private URL url;
         private ApiCallback apiCallback;
@@ -85,6 +88,12 @@ public class ApiRequest {
             this.pilotID = pilotID;
 
         }
+
+        /**
+         * Do HTTP request in Background
+         * @param voids void
+         * @return result or null
+         */
         @Override
         protected String doInBackground(Void... voids) {
 
@@ -95,7 +104,11 @@ public class ApiRequest {
                 return null;
             }
         }
-        // onPostExecute displays the results of the AsyncTask.
+
+        /**
+         * displays the results of the AsyncTask.
+         * @param result API HTTP request result
+         */
         @Override
         protected void onPostExecute(String result) {
             Log.i("result: ", result);
