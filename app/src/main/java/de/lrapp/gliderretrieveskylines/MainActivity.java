@@ -1,5 +1,11 @@
 package de.lrapp.gliderretrieveskylines;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,7 +21,7 @@ import java.util.Locale;
 
 import static java.lang.String.*;
 
-public class MainActivity extends AppCompatActivity implements ApiCallback{
+public class MainActivity extends AppCompatActivity implements ApiCallback {
 
     // UI
     private TextView txtv_debug;
@@ -28,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements ApiCallback{
     private TextView txtv_elev;
     private TextView txtv_hag;
     private TextView txtv_pilotId;
+    private TextView txtv_distMe;
     // API
     ApiCallback apiCallback;
     // placeholder strings
@@ -36,6 +43,9 @@ public class MainActivity extends AppCompatActivity implements ApiCallback{
     String position;
     // current locale
     Locale cur_locale;
+    // location manager & listener
+    LocationManager locationManager;
+    MyLocationListener locationListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +53,48 @@ public class MainActivity extends AppCompatActivity implements ApiCallback{
         setContentView(R.layout.activity_main);
         apiCallback = this;
         cur_locale = getResources().getConfiguration().locale;
+        initLocationListener();
         initUi();
+    }
+
+
+    /**
+     * Initialize the location listener, request location permission, if not granted
+     */
+    private void initLocationListener() {
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationListener = new MyLocationListener();
+
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }
+        locationManager.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER, 5000, 0, locationListener);
+    }
+
+    /**
+     * Overrides AppCompat.onRequestPermissionsResult, see their documentation for details
+     * @param requestCode Code to identify the request
+     * @param permissions permission as String
+     * @param grantResults int array with grant results
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[],
+                                           int[] grantResults) {
+        switch (requestCode) {
+            // access fine location
+            case 1: {
+                if (!(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    // permission granted
+                } else {
+                    // permission denied
+                    Toast.makeText(MainActivity.this, "Permission denied to read your Location", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
     }
 
     /**
@@ -60,6 +111,7 @@ public class MainActivity extends AppCompatActivity implements ApiCallback{
         txtv_elev = (TextView) findViewById(R.id.txtv_elev);
         txtv_hag = (TextView) findViewById(R.id.txtv_hag);
         txtv_pilotId = (TextView) findViewById(R.id.txtv_pilotId);
+        txtv_distMe = (TextView) findViewById(R.id.txtv_distMe);
 
         meters = getResources().getString(R.string.meters);
         kilometers = getResources().getString(R.string.kilometers);
@@ -92,12 +144,32 @@ public class MainActivity extends AppCompatActivity implements ApiCallback{
                 txtv_alt.setText(format(meters, data.getInt("altitude")));
                 txtv_elev.setText(format(meters, data.getInt("elevation")));
                 txtv_hag.setText(format(meters, data.getInt("altitude") - data.getInt("elevation")));
+                txtv_distMe.setText(calcDistance(data.getJSONArray("location").getDouble(1),
+                        data.getJSONArray("location").getDouble(0)));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         } else {
             Toast.makeText(this, getString(R.string.toast_pilotIdNF), Toast.LENGTH_LONG).show();
         }
+    }
+
+    /**
+     * Calculates distance between the retriever's and the pilot's location and formats as string
+     * @param lat pilot's Latitude
+     * @param lon pilot's longitude
+     * @return If there is GPS: distance formatted as string, else: "Searching fo GPS..."
+     */
+    private String calcDistance(double lat, double lon) {
+        Location myLocation = locationListener.getLocation();
+        Location pilotLocation = new Location("");
+        pilotLocation.setLatitude(lat);
+        pilotLocation.setLongitude(lon);
+        if (myLocation != null) {
+            Float distance = myLocation.distanceTo(pilotLocation)/1000;
+            return format(Locale.US, "%.01f km", distance);
+        }
+        return "Searching for GPS...";
     }
 
     /**
