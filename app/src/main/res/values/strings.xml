@@ -1,6 +1,6 @@
 <resources>
     <!-- Main Activity UI -->
-    <string name="app_name">Skylines Tracking Testing</string>
+    <string name="app_name">Glider Retrieve Skylines</string>
     <string name="et_pilotID">Pilots tracking ID</string>
     <string name="btn_update">Update</string>
     <string name="txtv_headline_pilotName">Pilot Name:</string>
