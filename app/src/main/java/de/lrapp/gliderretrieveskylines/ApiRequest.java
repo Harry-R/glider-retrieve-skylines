@@ -24,13 +24,13 @@ public class ApiRequest {
 
     /**
      *Coordinates the api request
-     * @param pilotId the pilot's id
+     * @param pilotIds the pilot's id
      * @param apiCallback the callback to call after fetching api data
      */
-    private static void liveTrackData(int pilotId, ApiCallback apiCallback) {
+    private static void liveTrackData(int pilotIds[], ApiCallback apiCallback) {
         try {
             URL url = new URL("https://skylines.aero/api/tracking");
-            new RequestTask(url, apiCallback, pilotId).execute();
+            new RequestTask(url, apiCallback, pilotIds).execute();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -77,15 +77,15 @@ public class ApiRequest {
     private static class RequestTask extends AsyncTask<Void, Void, String> {
         private URL url;
         private ApiCallback apiCallback;
-        private int pilotID;
+        private int pilotIds[];
         /**
          * Constructor
          * @param url url to connect to
          */
-        private RequestTask(URL url, ApiCallback apiCallback, int pilotID) {
+        private RequestTask(URL url, ApiCallback apiCallback, int pilotIds[]) {
             this.url = url;
             this.apiCallback = apiCallback;
-            this.pilotID = pilotID;
+            this.pilotIds = pilotIds;
 
         }
 
@@ -113,7 +113,7 @@ public class ApiRequest {
         protected void onPostExecute(String result) {
             Log.i("result: ", result);
             if (result != null) {
-                JSONObject jsonResult = filterResult(result, pilotID);
+                JSONObject[] jsonResult = filterResult(result, pilotIds);
                apiCallback.callback(jsonResult);
 
             }
@@ -123,23 +123,23 @@ public class ApiRequest {
     /**
      * converts result to json and filters for pilot ID
      * @param result http request result to filter
-     * @param pilotID pilot id to filter for
+     * @param pilotIds pilot ids to filter for
      * @return pilot's track data as JSONObject
      */
-    private static JSONObject filterResult(String result, int pilotID) {
+    private static JSONObject[] filterResult(String result, int pilotIds[]) {
         try {
             JSONObject jsonResult = new JSONObject(result);
-            JSONObject trackData;
+            JSONObject[] pilotsData = new JSONObject[4];
             //get JSONTrack array
             JSONArray trackArray = jsonResult.getJSONArray("tracks");
-            for(int i = 0; i < trackArray.length(); i++) {
-                if (trackArray.getJSONObject(i).getJSONObject("pilot").getInt("id") == pilotID) {
-                    trackData = trackArray.getJSONObject(i);
-                    return trackData;
+            for (int j = 0; pilotIds[j] != 0; j++)
+                for (int i = 0; i < trackArray.length(); i++) {
+                    if (trackArray.getJSONObject(i).getJSONObject("pilot").getInt("id") == pilotIds[j])
+                    {
+                        pilotsData[j] = trackArray.getJSONObject(i);
+                    }
                 }
-            }
-            return null;
-            // JSONObject jObj = jsonResult.getJSONArray("tracks").getJSONObject(0).getJSONObject("pilot");
+            return pilotsData;
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
@@ -148,10 +148,10 @@ public class ApiRequest {
 
     /**
      * update every 5 seconds by calling liveTrackData function
-     * @param pilotId the pilot's id
+     * @param pilotIds the pilot's id
      * @param apiCallback the callback to call after fetching api data
      */
-    static void startUpdater(final int pilotId, final ApiCallback apiCallback) {
+    static void startUpdater(final int pilotIds[], final ApiCallback apiCallback) {
         final Handler handler = new Handler();
         Timer timer = new Timer();
         TimerTask doAsynchronousTask = new TimerTask() {
@@ -160,7 +160,7 @@ public class ApiRequest {
                 handler.post(new Runnable() {
                     public void run() {
                         try {
-                            liveTrackData(pilotId, apiCallback);
+                            liveTrackData(pilotIds, apiCallback);
                         } catch (Exception e) {
                             // TODO Auto-generated catch block
                         }

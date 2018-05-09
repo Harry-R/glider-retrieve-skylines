@@ -23,7 +23,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/et_trackingId"/>
 
-
     <TextView
         android:id="@+id/txtv_headline_pilotName"
         android:text="@string/txtv_headline_pilotName"

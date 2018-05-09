@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements ApiCallback {
         // save pilotId settings
         SharedPreferences settings = getSharedPreferences("sharedPrefs", 0);
         SharedPreferences.Editor editor = settings.edit();
-        editor.putInt("pilotId", Integer.parseInt(et_pilotId.getText().toString()));
+        editor.putString("pilotId", et_pilotId.getText().toString());
         editor.apply();
     }
 
@@ -125,17 +125,21 @@ public class MainActivity extends AppCompatActivity implements ApiCallback {
 
         // restore pilotId from settings
         SharedPreferences settings = getSharedPreferences("sharedPrefs", 0);
-        int pilotId = settings.getInt("pilotId", 0);
-        et_pilotId.setText(pilotId + "");
+        String pilotId = settings.getString("pilotId", "");
+        et_pilotId.setText(pilotId);
     }
 
     /**
-     * on click listener for update button
+     * on click listener for update button, parse pilot ids from editText filed
      * @param view view the function was called from
      */
     public void clickBtnUpdate(View view) {
-        int pilotID = Integer.parseInt(et_pilotId.getText().toString());
-        ApiRequest.startUpdater(pilotID, apiCallback);
+        String[] pilots = et_pilotId.getText().toString().split(", ");
+        int[] pilotIDs = new int[4];
+        for(int i=0;  i<pilots.length; i++) {
+            pilotIDs[i] = Integer.parseInt(pilots[i]);
+        }
+        ApiRequest.startUpdater(pilotIDs, apiCallback);
     }
 
     /**
@@ -182,11 +186,11 @@ public class MainActivity extends AppCompatActivity implements ApiCallback {
      * work with data from callback, triggered when callback is called by ApiRequest's async task
      * @param data pilot's track data as JSONObject
      */
-    public void callback(JSONObject data) {
+    public void callback(JSONObject[] data) {
         // calculate height above GND for state machine
         int height = 0;
         try {
-             height = data.getInt("altitude") - data.getInt("elevation");
+             height = data[0].getInt("altitude") - data[0].getInt("elevation");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -198,6 +202,6 @@ public class MainActivity extends AppCompatActivity implements ApiCallback {
         // perform a state machine operation
         stateMachine.run(height);
         // update the UI
-        updateUI(data);
+        updateUI(data[0]);
     }
 }
