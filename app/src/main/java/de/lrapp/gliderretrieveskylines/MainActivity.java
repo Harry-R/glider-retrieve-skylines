@@ -46,6 +46,9 @@ public class MainActivity extends AppCompatActivity implements ApiCallback {
     // location manager & listener
     LocationManager locationManager;
     MyLocationListener locationListener;
+    // state machine
+    StateMachine stateMachine;
+    private Boolean firstUpdate = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -177,7 +180,21 @@ public class MainActivity extends AppCompatActivity implements ApiCallback {
      * @param data pilot's track data as JSONObject
      */
     public void callback(JSONObject data) {
-        Log.i("MainActivity:", "callback!");
+        // calculate height above GND for state machine
+        int height = 0;
+        try {
+             height = data.getInt("altitude") - data.getInt("elevation");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        // needs the state machine to be initialized?
+        if (firstUpdate) {
+            stateMachine = new StateMachine(height, this);
+            firstUpdate = false;
+        }
+        // perform a state machine operation
+        stateMachine.run(height);
+        // update the UI
         updateUI(data);
     }
 }

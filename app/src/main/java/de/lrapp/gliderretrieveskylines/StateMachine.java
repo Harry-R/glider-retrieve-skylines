@@ -1,5 +1,9 @@
 package de.lrapp.gliderretrieveskylines;
 
+import android.content.Context;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
+
 /**
  * "main" class, handles the state machine
  *
@@ -15,8 +19,8 @@ public class StateMachine {
      * Constructor, creates new state context
      * @param initialHeight pilot's initial height above GND at the time of state machine creation
      */
-    StateMachine(int initialHeight) {
-        sc = new StateContext(initialHeight);
+    StateMachine(int initialHeight, Context activityContext) {
+        sc = new StateContext(initialHeight, activityContext);
     }
 
     /**
@@ -44,7 +48,7 @@ interface Statelike {
      * Called by {@link #check(StateContext, int)} method, if necessary.
      * @param height pilot's actual height above GND
      */
-    void doNotify(int height);
+    void doNotify(StateContext sc, int height);
 }
 
 /**
@@ -54,12 +58,14 @@ interface Statelike {
  */
 class StateContext {
     private Statelike actualState;
+    private Context activityContext;
 
     /**
      * Constructor determines the initial state
      * @param initialHeight pilot's initial height above GND at the time of state machine creation
      */
-    StateContext(int initialHeight) {
+    StateContext(int initialHeight, Context lActivityContext) {
+        activityContext = lActivityContext;
         if (initialHeight < 10) {
             setState(new StateOnGnd());
         } else if (initialHeight < 200) {
@@ -73,6 +79,7 @@ class StateContext {
         } else if (initialHeight > 800) {
             setState(new StateAbove800());
         }
+        buildNotification("Tracking started", "Your pilot is " + initialHeight + "m high.");
      }
 
     /**
@@ -91,6 +98,26 @@ class StateContext {
         actualState.check(this, height);
     }
 
+    /**
+     * Builds and sends a notification
+     * @param titleText Notification title
+     * @param contentText Notification content
+     */
+    void buildNotification(String titleText, String contentText) {
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(activityContext, "channelId")
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(titleText)
+                .setContentText(contentText)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(activityContext);
+
+        // notificationId is a unique int for each notification that you must define
+        notificationManager.notify(42, mBuilder.build());
+
+
+    }
+
 }
 
 /**
@@ -101,14 +128,15 @@ class StateOnGnd implements Statelike {
     @Override
     public void check(StateContext context, int height) {
         if (height > 10) {
-            doNotify(height);
+            doNotify(context, height);
             context.setState(new StateBelow200());
         }
     }
 
     @Override
-    public void doNotify(int height) {
+    public void doNotify(StateContext sc, int height) {
         // pilot takeoff
+        sc.buildNotification("Takeoff", "Your pilot is in the air.");
     }
 }
 
@@ -120,7 +148,7 @@ class StateBelow200 implements Statelike {
     @Override
     public void check(StateContext context, int height) {
         if (height < 10) {
-            doNotify(height);
+            doNotify(context, height);
             context.setState(new StateOnGnd());
         } else if (height >= 200) {
             context.setState(new StateBelow400());
@@ -128,8 +156,9 @@ class StateBelow200 implements Statelike {
     }
 
     @Override
-    public void doNotify(int height) {
+    public void doNotify(StateContext context, int height) {
         // Pilot landed
+        context.buildNotification("Landed", "Your pilot has landed.");
     }
 }
 
@@ -141,7 +170,7 @@ class StateBelow400 implements Statelike {
     @Override
     public void check(StateContext context, int height) {
         if (height < 200) {
-            doNotify(height);
+            doNotify(context, height);
             context.setState(new StateBelow200());
         } else if (height >= 400) {
             context.setState(new StateBelow600());
@@ -149,8 +178,9 @@ class StateBelow400 implements Statelike {
     }
 
     @Override
-    public void doNotify(int height) {
+    public void doNotify(StateContext context, int height) {
         // below 200
+        context.buildNotification("Below 200m","Your pilot is below 200m and will probably land soon.");
     }
 }
 
@@ -162,7 +192,7 @@ class StateBelow600 implements Statelike {
     @Override
     public void check(StateContext context, int height) {
         if (height < 400) {
-            doNotify(height);
+            doNotify(context, height);
             context.setState(new StateBelow400());
         } else if (height >= 600) {
             context.setState(new StateBelow800());
@@ -170,8 +200,9 @@ class StateBelow600 implements Statelike {
     }
 
     @Override
-    public void doNotify(int height) {
+    public void doNotify(StateContext context, int height) {
         // below 400
+        context.buildNotification("Below 400m", "Your pilot is below 400m, get ready to retrieve him / her.");
     }
 }
 
@@ -183,7 +214,7 @@ class StateBelow800 implements Statelike {
     @Override
     public void check(StateContext context, int height) {
         if (height < 600) {
-            doNotify(height);
+            doNotify(context, height);
             context.setState(new StateBelow600());
         } else if (height >= 800) {
             context.setState(new StateAbove800());
@@ -191,8 +222,9 @@ class StateBelow800 implements Statelike {
     }
 
     @Override
-    public void doNotify(int height) {
+    public void doNotify(StateContext context, int height) {
         // below 600
+        context.buildNotification("Below 600m", "Your pilot is below 600m, not so high anymore...");
     }
 }
 
@@ -204,13 +236,14 @@ class StateAbove800 implements Statelike {
     @Override
     public void check(StateContext context, int height) {
         if (height < 800) {
-            doNotify(height);
+            doNotify(context, height);
             context.setState(new StateBelow200());
         }
     }
 
     @Override
-    public void doNotify(int height) {
+    public void doNotify(StateContext context, int height) {
         // below 800
+        context.buildNotification("Below 800m", "Your pilot is below 800m, keep an eye open at the live tracking.");
     }
 }
