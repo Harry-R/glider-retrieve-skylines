@@ -2,6 +2,7 @@ package de.lrapp.gliderretrieveskylines;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -58,6 +59,18 @@ public class MainActivity extends AppCompatActivity implements ApiCallback {
         cur_locale = getResources().getConfiguration().locale;
         initLocationListener();
         initUi();
+    }
+
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+
+        // save pilotId settings
+        SharedPreferences settings = getSharedPreferences("sharedPrefs", 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putInt("pilotId", Integer.parseInt(et_pilotId.getText().toString()));
+        editor.apply();
     }
 
 
@@ -119,6 +132,11 @@ public class MainActivity extends AppCompatActivity implements ApiCallback {
         meters = getResources().getString(R.string.meters);
         kilometers = getResources().getString(R.string.kilometers);
         position = getResources().getString(R.string.position);
+
+        // restore pilotId from settings
+        SharedPreferences settings = getSharedPreferences("sharedPrefs", 0);
+        int pilotId = settings.getInt("pilotId", 0);
+        et_pilotId.setText(pilotId + "");
     }
 
     /**
