@@ -2,22 +2,19 @@
     <!-- Main Activity UI -->
     <string name="app_name">Glider Retrieve Skylines</string>
     <string name="et_pilotID">Pilots tracking ID</string>
-    <string name="btn_update">Update</string>
+    <string name="btn_update">Start tracking</string>
     <string name="txtv_headline_pilotName">Pilot Name:</string>
     <string name="txtv_headline_nearestApt">Nearest airport:</string>
-    <string name="txtv_headline_nearestAptDist">Nearest airport distance:</string>
-    <string name="txtv_headline_pos">Position:</string>
-    <string name="txtv_headline_alt">Altitude:</string>
-    <string name="txtv_headline_elev">Elevation:</string>
-    <string name="txtv_headline_hag">Height above GND:</string>
-    <string name="txtv_headline_pilotId">Pilot Id:</string>
+    <string name="txtv_headline_hag">Height AGL:</string>
     <string name="txtv_headline_distMe">Distance to me:</string>
+    <string name="txtv_headline_pos">Position:</string>
     <string name="txtv_default">---</string>
     <string name="meters">%1$d m</string>
     <string name="kilometers">%1$.0f km</string>
     <string name="position">%1$f N/S %2$f E/W</string>
     <!-- Toasts -->
     <string name="toast_pilotIdNF">No tracking data found! Wrong pilot ID?</string>
+
 
 
 </resources>

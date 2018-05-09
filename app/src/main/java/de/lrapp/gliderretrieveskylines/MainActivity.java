@@ -25,16 +25,11 @@ import static java.lang.String.*;
 public class MainActivity extends AppCompatActivity implements ApiCallback {
 
     // UI
-    private TextView txtv_debug;
     private EditText et_pilotId;
     private TextView txtv_pilotName;
     private TextView txtv_nearestApt;
-    private TextView txtv_nearestAptDis;
     private TextView txtv_pos;
-    private TextView txtv_alt;
-    private TextView txtv_elev;
     private TextView txtv_hag;
-    private TextView txtv_pilotId;
     private TextView txtv_distMe;
     // API
     ApiCallback apiCallback;
@@ -117,16 +112,11 @@ public class MainActivity extends AppCompatActivity implements ApiCallback {
      * initialize UI
      */
     private void initUi() {
-        txtv_debug = (TextView) findViewById(R.id.txtv_debug);
         et_pilotId = (EditText) findViewById(R.id.et_trackingId);
         txtv_pilotName = (TextView) findViewById(R.id.txtv_pilotName);
         txtv_nearestApt = (TextView) findViewById(R.id.txtv_nearestApt);
-        txtv_nearestAptDis = (TextView) findViewById(R.id.txtv_nearestAptDist);
         txtv_pos = (TextView) findViewById(R.id.txtv_pos);
-        txtv_alt = (TextView) findViewById(R.id.txtv_alt);
-        txtv_elev = (TextView) findViewById(R.id.txtv_elev);
         txtv_hag = (TextView) findViewById(R.id.txtv_hag);
-        txtv_pilotId = (TextView) findViewById(R.id.txtv_pilotId);
         txtv_distMe = (TextView) findViewById(R.id.txtv_distMe);
 
         meters = getResources().getString(R.string.meters);
@@ -154,16 +144,11 @@ public class MainActivity extends AppCompatActivity implements ApiCallback {
      */
     private void updateUI(JSONObject data) {
         if(data != null) {
-            txtv_debug.setText(data.toString());
             try {
-                txtv_pilotName.setText(data.getJSONObject("pilot").getString("name"));
-                txtv_pilotId.setText(format(cur_locale, "%d", data.getJSONObject("pilot").getInt("id")));
-                txtv_nearestApt.setText(data.getJSONObject("nearestAirport").getString("name"));
-                txtv_nearestAptDis.setText(format(kilometers, data.getDouble("nearestAirportDistance")/1000));
+                txtv_pilotName.setText(format(cur_locale, "%s (%d)", data.getJSONObject("pilot").getString("name"), data.getJSONObject("pilot").getInt("id")));
+                txtv_nearestApt.setText(format(cur_locale, "%s (%.01f km)", data.getJSONObject("nearestAirport").getString("name"), data.getDouble("nearestAirportDistance")/1000));
                 txtv_pos.setText(format(position, data.getJSONArray("location").getDouble(1),
                         data.getJSONArray("location").getDouble(0)));
-                txtv_alt.setText(format(meters, data.getInt("altitude")));
-                txtv_elev.setText(format(meters, data.getInt("elevation")));
                 txtv_hag.setText(format(meters, data.getInt("altitude") - data.getInt("elevation")));
                 txtv_distMe.setText(calcDistance(data.getJSONArray("location").getDouble(1),
                         data.getJSONArray("location").getDouble(0)));
